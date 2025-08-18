@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RenHjem - Skandinavisk Rengøringsservice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #7CB342;
+            --primary-color-dark: #689F38;
+            --background-light: #F7F9F9;
+            --text-dark: #37474F;
+            --text-light: #607D8B;
+            --white-color: #ffffff;
+            --border-color: #ECEFF1;
+            --border-radius: 12px;
+            --shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body { font-family: 'Montserrat', sans-serif; color: var(--text-dark); line-height: 1.7; background-color: var(--white-color); }
+        .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 100px 0; }
+        h1, h2, h3 { font-weight: 600; line-height: 1.3; }
+        h2 { font-size: 2.8rem; text-align: center; margin-bottom: 50px; color: var(--text-dark); }
+        
+        .header { position: sticky; top: 0; width: 100%; z-index: 1000; transition: background-color 0.4s, box-shadow 0.4s; }
+        .header.scrolled { background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); text-decoration: none; }
+        .nav-menu-wrapper { display: flex; align-items: center; gap: 35px; }
+        .nav-menu { display: flex; list-style: none; gap: 35px; }
+        .nav-link { text-decoration: none; color: var(--text-light); font-weight: 600; transition: color 0.3s ease; position: relative; padding-bottom: 5px; }
+        .header.scrolled .nav-link { color: var(--text-dark); }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; transform: translateX(-50%); background-color: var(--primary-color); transition: width 0.3s ease; }
+        .nav-link:hover { color: var(--primary-color); }
+        .nav-link:hover::after { width: 100%; }
+        .lang-switcher { display: flex; gap: 12px; border-left: 1px solid var(--border-color); padding-left: 35px; }
+        .lang-btn { background: none; border: none; cursor: pointer; padding: 5px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s, box-shadow 0.3s; }
+        .lang-btn svg { width: 28px; height: 28px; border-radius: 50%; opacity: 0.6; transition: opacity 0.3s, box-shadow 0.3s; }
+        .lang-btn:hover svg { opacity: 1; }
+        .lang-btn.active svg { opacity: 1; box-shadow: 0 0 0 2px var(--primary-color); }
+
+        #hero { height: 65vh; min-height: 500px; display: flex; align-items: center; text-align: center; position: relative; padding: 0; }
+        .hero-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'); background-size: cover; background-position: center; z-index: -2; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(2px); z-index: -1; }
+        .hero-content { max-width: 800px; margin: 0 auto; }
+        #hero h1 { font-size: 4rem; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); }
+        #hero p { font-size: 1.25rem; margin-bottom: 40px; font-weight: 400; color: var(--text-dark); }
+        .cta-button { display: inline-block; background-color: var(--primary-color); color: var(--white-color); padding: 18px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: background-color 0.3s ease, transform 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; border: none; }
+        .cta-button:hover { background-color: var(--primary-color-dark); transform: translateY(-5px); }
+
+        #about { background-color: var(--white-color); }
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px; }
+        
+        /* --- ИЗМЕНЕНИЯ В СЕКЦИИ "О НАС" --- */
+        .about-image {
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden; /* Важно для эффекта увеличения */
+        }
+        .about-image img { 
+            width: 100%; 
+            display: block; /* Убирает лишний отступ под картинкой */
+            opacity: 0.9; /* Легкая прозрачность по умолчанию */
+            transition: opacity 0.4s ease, transform 0.4s ease; /* Плавный переход */
+        }
+        .about-image:hover img {
+            opacity: 1; /* Полная непрозрачность при наведении */
+            transform: scale(1.05); /* Легкое увеличение */
+        }
+        .about-text h2 { text-align: left; margin-bottom: 20px; }
+        .about-text p { color: var(--text-light); margin-bottom: 15px; }
+        
+        #services { background-color: var(--background-light); }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .service-card { background-color: var(--white-color); padding: 40px 30px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s; }
+        .service-card:hover { transform: translateY(-10px); box-shadow: var(--shadow); border-color: var(--primary-color); }
+        .service-card .icon { color: var(--primary-color); margin-bottom: 25px; height: 60px; width: 60px; transition: transform 0.3s; }
+        .service-card:hover .icon { transform: scale(1.1); }
+        .service-card h3 { font-size: 1.5rem; margin-bottom: 15px; color: var(--text-dark); }
+        .service-card p { color: var(--text-light); font-size: 1rem; }
+
+        #contact { background-color: var(--white-color); text-align: center; }
+        .contact-info { max-width: 600px; margin: 0 auto; }
+        .contact-info p { font-size: 1.1rem; color: var(--text-light); margin-bottom: 30px; }
+        .contact-details { list-style: none; display: inline-block; text-align: left; }
+        .contact-details li { margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; }
+        .contact-details .icon { color: var(--primary-color); margin-right: 15px; width: 24px; }
+        
+        footer { background-color: var(--text-dark); color: var(--background-light); text-align: center; padding: 30px 0; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 2000; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; }
+        .modal-overlay.active { visibility: visible; opacity: 1; }
+        .modal-content { background: var(--white-color); padding: 40px; border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; max-width: 500px; width: 90%; transform: scale(0.9); transition: transform 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: var(--text-light); background: none; border: none; cursor: pointer; line-height: 1; }
+        .modal-content h3 { margin-bottom: 20px; text-align: center; }
+
+        @media (max-width: 992px) {
+            .about-content { grid-template-columns: 1fr; }
+            .about-image { order: -1; margin-bottom: 40px; }
+            .about-text h2 { text-align: center; }
+        }
+        @media (max-width: 768px) {
+            html { font-size: 15px; }
+            h2 { font-size: 2.2rem; }
+            section { padding: 60px 0; }
+            .navbar { flex-direction: column; height: auto; padding: 15px 0; gap: 15px; }
+            .nav-menu-wrapper { flex-direction: column; gap: 20px; }
+            .lang-switcher { border-left: none; padding-left: 0; }
+            #hero { height: 80vh; }
+            #hero h1 { font-size: 2.8rem; }
+            #hero p { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header" id="header">
+        <nav class="navbar container">
+            <a href="#hero" class="logo">RenHjem</a>
+            <div class="nav-menu-wrapper">
+                <ul class="nav-menu">
+                    <li><a href="#about" class="nav-link" data-lang-da="Om Os" data-lang-en="About Us">Om Os</a></li>
+                    <li><a href="#services" class="nav-link" data-lang-da="Tjenester" data-lang-en="Services">Tjenester</a></li>
+                    <li><a href="#contact" class="nav-link" data-lang-da="Kontakt" data-lang-en="Contact">Kontakt</a></li>
+                </ul>
+                <div class="lang-switcher">
+                    <button class="lang-btn" id="lang-da"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 24"><defs><clipPath id="a"><path d="M0 0h32v24H0z"/></clipPath></defs><g clip-path="url(#a)"><path fill="#c8102e" d="M0 0h32v24H0z"/><path fill="#fff" d="M10 0h4v24h-4z"/><path fill="#fff" d="M0 10h32v4H0z"/></g></svg></button>
+                    <button class="lang-btn" id="lang-en"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 24"><g clip-path="url(#a)"><path fill="#012169" d="M0 0h32v24H0z"/><path fill="#FFF" d="m32 0-32 24V0zm0 0H0v.5L31.5 24H32V0zM13 0v9h-13v6h13v9h6v-9h13V9H19V0h-6Z"/><path fill="#C8102E" d="M14 0v10H0v4h14v10h4V14h14v-4H18V0h-4Z"/><path fill="#FFF" d="m21.033 10.322-21.033-10.322v3.314L16.686 12 0 20.941v3.059L21.033 13.678h3.281L32 24V0Z"/><path fill="#C8102E" d="m22.213 12 9.787 12V12h-9.787zM0 0l9.787 12H0V0zm9.787 12L0 24V12h9.787zM32 0 22.213 12H32V0z"/></g></svg></button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="hero-background"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content container">
+                <h1 data-lang-da="Skab et fredfyldt frirum." data-lang-en="Create your peaceful sanctuary.">Skab et fredfyldt frirum.</h1>
+                <p data-lang-da="Start med et rent hjem. Vi bringer harmoni og renlighed ind i dit liv." data-lang-en="It starts with a clean home. We bring harmony and cleanliness into your life.">Start med et rent hjem. Vi bringer harmoni og renlighed ind i dit liv.</p>
+                <button class="cta-button" id="open-modal-btn" data-lang-da="Bestil Rengøring Nu" data-lang-en="Book Your Cleaning Now">Bestil Rengøring Nu</button>
+            </div>
+        </section>
+
+        <section id="about">
+             <div class="container about-content">
+                <div class="about-text">
+                    <h2 data-lang-da="Vores Historie" data-lang-en="Our Story">Vores Historie</h2>
+                    <p data-lang-da="RenHjem blev grundlagt ud fra en simpel idé: at levere enestående rengøring med et personligt præg. Vi er en lille, familiedrevet virksomhed, der er stolt af vores opmærksomhed på detaljer og engagement i kundetilfredshed. Vi behandler hvert hjem, som var det vores eget, og bruger miljøvenlige produkter for at sikre et sikkert og sundt miljø for dig og din familie." data-lang-en="RenHjem was founded on a simple idea: to provide exceptional cleaning with a personal touch. As a small, family-owned business, we pride ourselves on our attention to detail and customer satisfaction. We treat every home as if it were our own, using eco-friendly products to ensure a safe, healthy environment for you and your family.">RenHjem blev grundlagt ud fra en simpel idé: at levere enestående rengøring med et personligt præg.</p>
+                </div>
+                <div class="about-image">
+                    <!-- НОВОЕ ИЗОБРАЖЕНИЕ -->
+                    <img src="https://images.unsplash.com/photo-1600121848594-d8644e57abab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Bright and clean scandinavian style living room">
+                </div>
+            </div>
+        </section>
+        
+        <section id="services">
+            <div class="container">
+                <h2 data-lang-da="Vores Tjenester" data-lang-en="Our Services">Vores Tjenester</h2>
+                <div class="services-grid">
+                    <div class="service-card"><svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m-3-1l-3-1m3 1v5.25c0 .621-.504 1.125-1.125-1.125h-2.25c-.621 0-1.125-.504-1.125-1.125V12m12 9h-6.75M12 3.75l-4.5 1.636M12 3.75l4.5 1.636m-9 0L12 3.75" /></svg><h3 data-lang-da="Basis Rengøring" data-lang-en="Standard Cleaning">Basis Rengøring</h3><p data-lang-da="Ideel til ugentlig eller bi-ugentlig vedligeholdelse for at holde dit hjem konstant friskt og rent." data-lang-en="Ideal for weekly or bi-weekly maintenance to keep your home consistently fresh and clean.">Ideel til ugentlig eller bi-ugentlig vedligeholdelse.</p></div>
+                    <div class="service-card"><svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.562L16.25 22.5l-.648-1.938a3.375 3.375 0 00-2.6-2.6L11.25 18l1.938-.648a3.375 3.375 0 002.6-2.6l.648-1.938 1.938.648a3.375 3.375 0 002.6 2.6l1.938.648-1.938.648a3.375 3.375 0 00-2.6 2.6z" /></svg><h3 data-lang-da="Dybdegående Rengøring" data-lang-en="Deep Cleaning">Dybdegående Rengøring</h3><p data-lang-da="En omfattende service, der dækker alle hjørner og kroge. Perfekt til forårsrengøring eller specielle lejligheder." data-lang-en="A comprehensive service that covers every nook and cranny. Perfect for a seasonal clean or special occasions.">En omfattende service, der dækker alle hjørner og kroge.</p></div>
+                    <div class="service-card"><svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5v-1.875a3.375 3.375 0 003.375-3.375h1.5a1.125 1.125 0 011.125 1.125v-1.5c0-.621.504-1.125 1.125-1.125H12M8.25 18.75v-1.875a3.375 3.375 0 013.375-3.375h1.5a1.125 1.125 0 001.125-1.125v-1.5c0-.621.504-1.125 1.125-1.125H12m-3.75 0H9.75m0 0H12m-3.75 0V9.375c0-.621.504-1.125 1.125-1.125h1.5c.621 0 1.125.504 1.125 1.125v1.5m-3.75 0h3.75M3 12h18M3 12v-1.5c0-.621.504-1.125 1.125-1.125H19.875c.621 0 1.125.504 1.125 1.125V12M3 12v3.75m18-3.75v3.75m-18 0h18" /></svg><h3 data-lang-da="Flytterengøring" data-lang-en="Move In / Out Clean">Flytterengøring</h3><p data-lang-da="Gør din flytning stressfri. Vi efterlader dit gamle hjem pletfrit eller forbereder dit nye til indflytning." data-lang-en="Make your move stress-free. We'll leave your old home spotless or prepare your new one for arrival.">Gør din flytning stressfri.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact">
+            <div class="container contact-info">
+                <h2 data-lang-da="Klar til et Renere Hjem?" data-lang-en="Ready for a Cleaner Home?">Klar til et Renere Hjem?</h2>
+                <p data-lang-da="Kontakt os i dag for et uforpligtende tilbud. Vi ser frem til at høre fra dig!" data-lang-en="Contact us today for a no-obligation quote. We look forward to hearing from you!">Kontakt os i dag for et uforpligtende tilbud.</p>
+                <ul class="contact-details">
+                    <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg></span> <span data-lang-da="Jernbane Alle, 2720 Vanløse" data-lang-en="Jernbane Alle, 2720 Vanløse">Jernbane Alle, 2720 Vanløse</span></li>
+                    <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></span> <span data-lang-da="Man - Fre, 08:00 - 17:00" data-lang-en="Mon - Fri, 08:00 - 17:00">Man - Fre, 08:00 - 17:00</span></li>
+                    <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.211-.998-.552-1.348l-2.454-2.454a2.25 2.25 0 00-3.182 0l-1.341 1.341a2.25 2.25 0 01-3.182 0l-2.454-2.454A2.25 2.25 0 006.096 7.5H4.5A2.25 2.25 0 002.25 9.75v-3z" /></svg></span> <span data-lang-da="Telefon: 60 90 52 72" data-lang-en="Phone: 60 90 52 72">Telefon: 60 90 52 72</span></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p data-lang-da="&copy; 2024 RenHjem. Alle rettigheder forbeholdes." data-lang-en="&copy; 2024 RenHjem. All Rights Reserved.">&copy; 2024 RenHjem. Alle rettigheder forbeholdes.</p>
+    </footer>
+
+    <div class="modal-overlay" id="booking-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="close-modal-btn">&times;</button>
+            <h3 data-lang-da="Bestil Din Rengøring" data-lang-en="Book Your Cleaning">Bestil Din Rengøring</h3>
+            <ul class="contact-details">
+                <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg></span> <span data-lang-da="Jernbane Alle, 2720 Vanløse" data-lang-en="Jernbane Alle, 2720 Vanløse">Jernbane Alle, 2720 Vanløse</span></li>
+                <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></span> <span data-lang-da="Man - Fre, 08:00 - 17:00" data-lang-en="Mon - Fri, 08:00 - 17:00">Man - Fre, 08:00 - 17:00</span></li>
+                <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.211-.998-.552-1.348l-2.454-2.454a2.25 2.25 0 00-3.182 0l-1.341 1.341a2.25 2.25 0 01-3.182 0l-2.454-2.454A2.25 2.25 0 006.096 7.5H4.5A2.25 2.25 0 002.25 9.75v-3z" /></svg></span> <span data-lang-da="Ring til os: 60 90 52 72" data-lang-en="Call us: 60 90 52 72">Ring til os: 60 90 52 72</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                header.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            const langButtons = { da: document.getElementById('lang-da'), en: document.getElementById('lang-en') };
+            const translatableElements = document.querySelectorAll('[data-lang-da]');
+            const setLanguage = (lang) => {
+                const langKey = lang === 'da' ? 'langDa' : 'langEn';
+                translatableElements.forEach(el => {
+                    if (el.dataset[langKey]) el.textContent = el.dataset[langKey];
+                });
+                document.documentElement.lang = lang;
+                Object.values(langButtons).forEach(btn => btn.classList.remove('active'));
+                if (langButtons[lang]) langButtons[lang].classList.add('active');
+            };
+            langButtons.da.addEventListener('click', () => setLanguage('da'));
+            langButtons.en.addEventListener('click', () => setLanguage('en'));
+            setLanguage('da');
+
+            const modal = document.getElementById('booking-modal');
+            const openModalBtn = document.getElementById('open-modal-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const openModal = () => modal.classList.add('active');
+            const closeModal = () => modal.classList.remove('active');
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) closeModal();
+            });
+        });
+    </script>
+</body>
+</html>
