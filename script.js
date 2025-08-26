@@ -42,29 +42,84 @@ document.addEventListener('DOMContentLoaded', () => {
     setLanguage(savedLang);
 
     // --- Modal Logic ---
-    const modal = document.getElementById('booking-modal');
-    const openModalBtn = document.getElementById('open-modal-btn');
-    const closeModalBtn = document.getElementById('close-modal-btn');
+    const bookingModal = document.getElementById('booking-modal');
+    const contactModal = document.getElementById('contact-modal'); // Новое модальное окно контактов
 
-    const openModal = () => modal.classList.add('active');
-    const closeModal = () => modal.classList.remove('active');
+    const openBookingModalBtn = document.querySelector('.button-primary'); // Кнопка "Get a Quote" в навигации
+    const openContactModalBtn = document.getElementById('open-contact-modal-btn'); // Кнопка в секции Hero
+    
+    const closeBookingModalBtn = bookingModal.querySelector('.modal-close-btn');
+    const closeContactModalBtn = contactModal ? contactModal.querySelector('.modal-close-btn') : null; // Проверка на существование
 
-    if (modal && openModalBtn && closeModalBtn) {
-        openModalBtn.addEventListener('click', openModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        
-        // Close modal when clicking on the overlay
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal();
+    const bookingForm = document.querySelector('.booking-form');
+
+    const openModal = (modalElement) => modalElement.classList.add('active');
+    const closeModal = (modalElement) => modalElement.classList.remove('active');
+
+    console.log('bookingModal:', bookingModal);
+    console.log('contactModal:', contactModal);
+    console.log('openBookingModalBtn:', openBookingModalBtn);
+    console.log('openContactModalBtn:', openContactModalBtn);
+    console.log('closeBookingModalBtn:', closeBookingModalBtn);
+    console.log('closeContactModalBtn:', closeContactModalBtn);
+
+    // Логика для модального окна бронирования
+    if (bookingModal && openBookingModalBtn && closeBookingModalBtn) {
+        openBookingModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(bookingModal);
+        });
+        closeBookingModalBtn.addEventListener('click', () => closeModal(bookingModal));
+        bookingModal.addEventListener('click', (event) => {
+            if (event.target === bookingModal) {
+                closeModal(bookingModal);
             }
         });
+    }
 
-        // Close modal on Escape key press
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && modal.classList.contains('active')) {
-                closeModal();
+    // Логика для модального окна контактов
+    if (contactModal && openContactModalBtn && closeContactModalBtn) {
+        openContactModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(contactModal);
+        });
+        closeContactModalBtn.addEventListener('click', () => closeModal(contactModal));
+        contactModal.addEventListener('click', (event) => {
+            if (event.target === contactModal) {
+                closeModal(contactModal);
             }
+        });
+    }
+
+    // Закрытие модальных окон по Escape
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            if (bookingModal.classList.contains('active')) {
+                closeModal(bookingModal);
+            }
+            if (contactModal && contactModal.classList.contains('active')) {
+                closeModal(contactModal);
+            }
+        }
+    });
+
+    // Handle form submission
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const squareMeters = document.getElementById('square-meters').value;
+
+            console.log('Данные формы бронирования:');
+            console.log('Имя:', name);
+            console.log('E-mail:', email);
+            console.log('Квадратные метры:', squareMeters);
+
+            alert('Your request has been sent! We will contact you shortly.');
+            closeModal(bookingModal);
+            bookingForm.reset();
         });
     }
 });
