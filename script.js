@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         translatableElements.forEach(el => {
             if (el.dataset[langKey]) {
-                el.textContent = el.dataset[langKey];
+                el.innerHTML = el.dataset[langKey];
             }
         });
         
